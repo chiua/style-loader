@@ -17,13 +17,12 @@ module.exports = function (loaderContext, attrs) {
 	}
 
 	var preparedAttrs = [];
+	var defaultAttr = ['data-hash:[md5:hash]', 'data-id:[name]'];
 
-	if (Array.isArray(attrs)) {
-		for (var i = attrs.length; i--;) {
-			preparedAttrs.push(parseAttrs(attrs[i]));
-		}
-	} else {
-		preparedAttrs.push(parseAttrs(attrs));
+	attrs = defaultAttr.concat(attrs);
+
+	for (var i = attrs.length; i--;) {
+		preparedAttrs.push(parseAttrs(attrs[i]));
 	}
 
 	return preparedAttrs;

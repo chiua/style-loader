@@ -130,9 +130,27 @@ function createStyleElement(options) {
 	var styleElement = document.createElement("style");
 	styleElement.type = "text/css";
 
+	var sameStyleInDom;
+	var sameStyleHash;
+	var currentHash;
+
 	addStyleAttributes(styleElement, options.attrs);
 
+	sameStyleInDom = document.querySelector('[data-id=' + styleElement.getAttribute('data-id') + ']');
+
+	if (sameStyleInDom) {
+		sameStyleHash = sameStyleInDom.getAttribute('data-hash');
+		currentHash = styleElement.getAttribute('data-hash');
+
+		if (currentHash !== sameStyleHash) {
+			sameStyleInDom.parentNode.removeChild(sameStyleInDom);
+		} else {
+			return sameStyleInDom;
+		}
+	}
+
 	insertStyleElement(options, styleElement);
+	
 	return styleElement;
 }
 
