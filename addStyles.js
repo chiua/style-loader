@@ -136,7 +136,7 @@ function createStyleElement(options) {
 
 	addStyleAttributes(styleElement, options.attrs);
 
-	sameStyleInDom = document.querySelector('[data-id=' + styleElement.getAttribute('data-id') + ']');
+	sameStyleInDom = document.querySelector('[data-id="' + styleElement.getAttribute('data-id') + '"]');
 
 	if (sameStyleInDom) {
 		sameStyleHash = sameStyleInDom.getAttribute('data-hash');
@@ -150,7 +150,7 @@ function createStyleElement(options) {
 	}
 
 	insertStyleElement(options, styleElement);
-	
+
 	return styleElement;
 }
 
