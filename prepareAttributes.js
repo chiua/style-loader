@@ -17,7 +17,7 @@ module.exports = function (loaderContext, attrs, content) {
 	}
 
 	var preparedAttrs = [];
-	var defaultAttr = ['data-hash:[md5:hash]', 'data-id:[name]'];
+	var defaultAttr = ['data-hash:[hash]', 'data-id:[name]'];
 
 	attrs = defaultAttr.concat(attrs);
 
