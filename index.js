@@ -5,32 +5,41 @@
 var loaderUtils = require("loader-utils"),
 	path = require("path"),
 	prepareAttributes = require("./prepareAttributes");
-module.exports = function() {};
-module.exports.pitch = function(remainingRequest) {
+module.exports = function (content) {
 	if(this.cacheable) this.cacheable();
+
 	var query = loaderUtils.parseQuery(this.query);
-	if (query.attrs) query.attrs = prepareAttributes(this, query.attrs);
-	return [
-		"// style-loader: Adds some css to the DOM by adding a <style> tag",
-		"",
-		"// load the styles",
-		"var content = require(" + loaderUtils.stringifyRequest(this, "!!" + remainingRequest) + ");",
-		"if(typeof content === 'string') content = [[module.id, content, '']];",
-		"// add the styles to the DOM",
-		"var update = require(" + loaderUtils.stringifyRequest(this, "!" + path.join(__dirname, "addStyles.js")) + ")(content, " + JSON.stringify(query) + ");",
-		"if(content.locals) module.exports = content.locals;",
-		"// Hot Module Replacement",
-		"if(module.hot) {",
-		"	// When the styles change, update the <style> tags",
-		"	if(!content.locals) {",
-		"		module.hot.accept(" + loaderUtils.stringifyRequest(this, "!!" + remainingRequest) + ", function() {",
-		"			var newContent = require(" + loaderUtils.stringifyRequest(this, "!!" + remainingRequest) + ");",
-		"			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];",
-		"			update(newContent);",
-		"		});",
-		"	}",
-		"	// When the module is disposed, remove the <style> tags",
-		"	module.hot.dispose(function() { update(); });",
-		"}"
-	].join("\n");
+	if (query.attrs) query.attrs = prepareAttributes(this, query.attrs, content);
+
+	return this.data.content(query);
+};
+
+module.exports.pitch = function (remainingRequest, precedingRequest, data) {
+	if(this.cacheable) this.cacheable();
+
+	data.content = function (query) {
+		return [
+			"// style-loader: Adds some css to the DOM by adding a <style> tag",
+			"",
+			"// load the styles",
+			"var content = require(" + loaderUtils.stringifyRequest(this, "!!" + remainingRequest) + ");",
+			"if(typeof content === 'string') content = [[module.id, content, '']];",
+			"// add the styles to the DOM",
+			"var update = require(" + loaderUtils.stringifyRequest(this, "!" + path.join(__dirname, "addStyles.js")) + ")(content, " + JSON.stringify(query) + ");",
+			"if(content.locals) module.exports = content.locals;",
+			"// Hot Module Replacement",
+			"if(module.hot) {",
+			"	// When the styles change, update the <style> tags",
+			"	if(!content.locals) {",
+			"		module.hot.accept(" + loaderUtils.stringifyRequest(this, "!!" + remainingRequest) + ", function() {",
+			"			var newContent = require(" + loaderUtils.stringifyRequest(this, "!!" + remainingRequest) + ");",
+			"			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];",
+			"			update(newContent);",
+			"		});",
+			"	}",
+			"	// When the module is disposed, remove the <style> tags",
+			"	module.hot.dispose(function() { update(); });",
+			"}"
+		].join("\n");
+	}
 };
