@@ -130,13 +130,13 @@ function createStyleElement(options) {
 	var styleElement = document.createElement("style");
 	styleElement.type = "text/css";
 
-	addStyleAttributes(styleElement, options.attrs);
+	addAttributes(styleElement, options.attrs);
 
 	insertStyleElement(options, styleElement);
 	return styleElement;
 }
 
-function addStyleAttributes (style, attrs) {
+function addAttributes (style, attrs) {
 	if (!attrs) return false;
 
 	for (var i = attrs.length; i--;) {
@@ -150,6 +150,7 @@ function addStyleAttributes (style, attrs) {
 function createLinkElement(options) {
 	var linkElement = document.createElement("link");
 	linkElement.rel = "stylesheet";
+	addAttributes(linkElement, options.attrs);
 	insertStyleElement(options, linkElement);
 	return linkElement;
 }
